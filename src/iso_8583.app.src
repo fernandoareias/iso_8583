@@ -1,0 +1,40 @@
+{application, iso_8583,
+ [
+  {description, "ISO 8583 financial transaction messaging library for Erlang"},
+  {vsn, "1.0.0"},
+  {modules, [
+      % Main modules
+      iso_8583,
+      iso_8583_converters,
+      iso_8583_fields,
+      iso_8583_marshaller,
+      
+      % Converters
+      iso_8583_hex_converter,
+      iso_8583_numeric_converter,
+      iso_8583_ebcdic_converter,
+      iso_8583_bitmap_converter,
+      iso_8583_track2_converter,
+      
+      % Fields (version specific)
+      iso_8583_fields_1987,
+      iso_8583_fields_1993,
+      iso_8583_fields_2003,
+      
+      % Marshallers (format specific)
+      iso_8583_marshaller_ascii,
+      iso_8583_marshaller_binary,
+      iso_8583_marshaller_ebcdic,
+      iso_8583_marshaller_json,
+      iso_8583_marshaller_xml,
+      
+      % Utils
+      iso_8583_string_utils,
+      iso_8583_message_utils
+  ]},
+  {registered, []},
+  {env, []},
+  {applications, [kernel, stdlib]},
+  {licenses, ["Apache-2.0"]},
+  {links, [{"GitHub", "https://github.com/seu-usuario/iso_8583"}]}
+ ]}.

@@ -1,20 +1,45 @@
-.rebar3
-_build
-_checkouts
-_vendor
-.eunit
-*.o
+# Erlang build artifacts
+_build/
+ebin/
 *.beam
+*.app
+
+# Rebar
+rebar3.crashdump
+.rebar/
+.rebar3/
+
+# Erlang crash dumps
+erl_crash.dump
+
+# Dialyzer
+.dialyzer_plt
 *.plt
+
+# Documentation
+doc/
+docs/html/
+
+# Editor/IDE files
+.vscode/
+.idea/
 *.swp
 *.swo
-.erlang.cookie
-ebin
-log
-erl_crash.dump
-.rebar
-logs
-.idea
-*.iml
-rebar3.crashdump
 *~
+.DS_Store
+
+# Test artifacts
+.eunit/
+test/*.beam
+logs/
+*.coverdata
+
+# Dependencies
+deps/
+
+# Compiled object files
+*.o
+*.so
+
+# Temporary files
+*.tmp

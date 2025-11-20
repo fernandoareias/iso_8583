@@ -69,7 +69,7 @@
 
 marshal(Message, Format) when is_atom(Format) ->
     MarshalHandlers = get_marshaller_config(Format),
-    marshal(Message, MarshalHandlers, undefined).
+    marshal_with_handlers(Message, MarshalHandlers).
 
 %% @doc Marshals an ISO 8583 message using a specified format and encoding rules.
 %%
@@ -92,7 +92,7 @@ marshal(Message, Format, EncodingRules) when is_atom(Format) ->
 
 unmarshal(Marshalled, Format) when is_atom(Format) ->
     MarshalHandlers = get_marshaller_config(Format),
-    unmarshal(Marshalled, MarshalHandlers, undefined).
+    unmarshal_with_handlers(Marshalled, MarshalHandlers).
 
 %% @doc Unmarshals a byte sequence using a specified format and encoding rules.
 %%
@@ -146,11 +146,11 @@ marshal_with_handlers(Message, MarshalHandlers) ->
     OptionsRecord = parse_options(MarshalHandlers, #marshal_options{}),
     {Marshalled1, Message1} = init_marshalling(OptionsRecord, Message),
     MarshalledMti = encode_mti(OptionsRecord, Message1),
-    Marshalled2 = <<Marshalled1/binary, MarshalledMti/binary>>,
+    Marshalled2 = concat_binary(Marshalled1, MarshalledMti),
     {MarshalledBitmap, Message2} = encode_bitmap(OptionsRecord, Message1),
-    Marshalled3 = <<Marshalled2/binary, MarshalledBitmap/binary>>,
+    Marshalled3 = concat_binary(Marshalled2, MarshalledBitmap),
     MarshalledFields = encode_fields(OptionsRecord, Message2),
-    Marshalled4 = <<Marshalled3/binary, MarshalledFields/binary>>,
+    Marshalled4 = concat_binary(Marshalled3, MarshalledFields),
     end_marshalling(OptionsRecord, Message2, Marshalled4).
 
 %% @doc Unmarshals a byte sequence into an ISO 8583 message using handlers.
@@ -169,6 +169,16 @@ unmarshal_with_handlers(Marshalled, MarshalHandlers) ->
 %%
 %% Local Functions
 %%
+
+%% Helper function to concatenate binaries or lists
+concat_binary(A, B) when is_binary(A), is_binary(B) ->
+    <<A/binary, B/binary>>;
+concat_binary(A, B) when is_binary(A), is_list(B) ->
+    <<A/binary, (list_to_binary(B))/binary>>;
+concat_binary(A, B) when is_list(A), is_binary(B) ->
+    <<(list_to_binary(A))/binary, B/binary>>;
+concat_binary(A, B) when is_list(A), is_list(B) ->
+    list_to_binary([A, B]).
 
 parse_options([], OptionsRecord) ->
     OptionsRecord;
@@ -277,7 +287,7 @@ encode(Fields, Msg, Result, FieldMarshaller, EncodingRules, FieldArranger) ->
     end,
     Value = iso_8583:get(FieldId, Msg),
     EncodedValue = FieldMarshaller:marshal_field(FieldId, Value, EncodingRules),
-    encode(Tail, Msg, <<Result/binary, EncodedValue/binary>>, FieldMarshaller, EncodingRules, undefined).
+    encode(Tail, Msg, concat_binary(Result, EncodedValue), FieldMarshaller, EncodingRules, undefined).
 
 decode_fields([], Message, _OptionsRecord, Marshalled) ->
     {Message, Marshalled};

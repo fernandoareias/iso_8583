@@ -69,12 +69,13 @@ marshal_field(FieldId, FieldValue, _EncodingRules) ->
 	Id = integer_to_list(FieldId),
 	AttrKeys = iso_8583:get_attribute_keys(FieldValue),
 	Attrs = [{Key, iso_8583:get_attribute(Key, FieldValue)} || Key <- AttrKeys],
+	MarshalledContent = iso_8583_marshaller:marshal(FieldValue, [{field_marshaller, ?MODULE}, {mti_marshaller, ?MODULE}]),
 	"<isomsg id=\"" ++
 		Id ++
 		"\"" ++
 		encode_attributes(Attrs) ++
 		">\n" ++
-		iso_8583_marshaller:marshal(FieldValue, [{field_marshaller, ?MODULE}, {mti_marshaller, ?MODULE}]) ++
+		binary_to_list(MarshalledContent) ++
 		"</isomsg>\n".
 
 %% @doc Extracts a field value from an XML document.  The field value,
@@ -220,6 +221,9 @@ extract_ids([Field|Tail], Result) when is_record(Field, xmlElement) ->
 extract_ids([_Field|Tail], Result) ->
 	extract_ids(Tail, Result).
 
+%% @doc Finds and unmarshals a specific field from a list of XML elements.
+-spec unmarshal_field(integer(), list()) -> iso8583field_value().
+
 unmarshal_field(TargetId, [Field|Tail]) when is_record(Field, xmlElement) ->
 	Attributes = Field#xmlElement.attributes,
 	AttributesList = attributes_to_list(Attributes, []),
@@ -233,6 +237,9 @@ unmarshal_field(TargetId, [Field|Tail]) when is_record(Field, xmlElement) ->
 	end;
 unmarshal_field(TargetId, [_Field|Tail]) ->
 	unmarshal_field(TargetId, Tail).
+
+%% @doc Unmarshals a single XML element to a field value.
+-spec unmarshal_field(tuple()) -> iso8583field_value().
 
 unmarshal_field(FieldElement) ->
 	Attributes = FieldElement#xmlElement.attributes,

@@ -141,41 +141,80 @@ unmarshal_end(Message, []) ->
 %%
 %% Local Functions
 %%
-marshal_data_element({n, llvar, Length}, FieldValue) when length(FieldValue) =< Length ->
-	LField = iso_8583_converters:integer_to_bcd(length(FieldValue), 2),
-	VField = iso_8583_converters:ascii_hex_to_bcd(FieldValue, "0"),
-	LField ++ VField;
-marshal_data_element({z, llvar, Length}, FieldValue) when length(FieldValue) =< Length ->
-	LField = iso_8583_converters:integer_to_bcd(length(FieldValue), 2),
-	VField = iso_8583_converters:string_to_track2(FieldValue),
-	LField ++ VField;
+
+%% Helper function to convert field value to list if it's a binary
+field_value_to_list(FieldValue) when is_binary(FieldValue) ->
+	binary_to_list(FieldValue);
+field_value_to_list(FieldValue) when is_list(FieldValue) ->
+	FieldValue.
+
+marshal_data_element({n, llvar, Length}, FieldValue) ->
+	Value = field_value_to_list(FieldValue),
+	case length(Value) =< Length of
+		true ->
+			LField = iso_8583_converters:integer_to_bcd(length(Value), 2),
+			VField = iso_8583_converters:ascii_hex_to_bcd(Value, "0"),
+			LField ++ VField
+	end;
+marshal_data_element({z, llvar, Length}, FieldValue) ->
+	Value = field_value_to_list(FieldValue),
+	case length(Value) =< Length of
+		true ->
+			LField = iso_8583_converters:integer_to_bcd(length(Value), 2),
+			VField = iso_8583_converters:string_to_track2(Value),
+			LField ++ VField
+	end;
 marshal_data_element({n, fixed, Length}, FieldValue) ->
+	Value = field_value_to_list(FieldValue),
 	PaddedValue = case Length rem 2 of
 		0 ->
-			iso_8583_converters:integer_to_string(list_to_integer(FieldValue), Length);
+			iso_8583_converters:integer_to_string(list_to_integer(Value), Length);
 		1 ->
-			iso_8583_converters:integer_to_string(list_to_integer(FieldValue), Length+1)
+			iso_8583_converters:integer_to_string(list_to_integer(Value), Length+1)
 	end,
 	iso_8583_converters:ascii_hex_to_bcd(PaddedValue, "0");
 marshal_data_element({an, fixed, Length}, FieldValue) ->
-	iso_8583_converters:pad_with_trailing_spaces(FieldValue, Length);
+	Value = field_value_to_list(FieldValue),
+	iso_8583_converters:pad_with_trailing_spaces(Value, Length);
 marshal_data_element({ans, fixed, Length}, FieldValue) ->
-	iso_8583_converters:pad_with_trailing_spaces(FieldValue, Length);
-marshal_data_element({an, llvar, Length}, FieldValue) when length(FieldValue) =< Length ->
-	LField = iso_8583_converters:integer_to_bcd(length(FieldValue), 2),
-	LField ++ FieldValue;
-marshal_data_element({ns, llvar, Length}, FieldValue) when length(FieldValue) =< Length ->
-	LField = iso_8583_converters:integer_to_bcd(length(FieldValue), 2),
-	LField ++ FieldValue;
-marshal_data_element({ans, llvar, Length}, FieldValue) when length(FieldValue) =< Length ->
-	LField = iso_8583_converters:integer_to_bcd(length(FieldValue), 2),
-	LField ++ FieldValue;
-marshal_data_element({ans, lllvar, Length}, FieldValue) when length(FieldValue) =< Length ->
-	LField = iso_8583_converters:integer_to_bcd(length(FieldValue), 3),
-	LField ++ FieldValue;
-marshal_data_element({x_n, fixed, Length}, [Head | FieldValue]) when Head =:= $C orelse Head =:= $D ->
-	IntValue = list_to_integer(FieldValue),
-	[Head|iso_8583_converters:integer_to_bcd(IntValue, Length)];
+	Value = field_value_to_list(FieldValue),
+	iso_8583_converters:pad_with_trailing_spaces(Value, Length);
+marshal_data_element({an, llvar, Length}, FieldValue) ->
+	Value = field_value_to_list(FieldValue),
+	case length(Value) =< Length of
+		true ->
+			LField = iso_8583_converters:integer_to_bcd(length(Value), 2),
+			LField ++ Value
+	end;
+marshal_data_element({ns, llvar, Length}, FieldValue) ->
+	Value = field_value_to_list(FieldValue),
+	case length(Value) =< Length of
+		true ->
+			LField = iso_8583_converters:integer_to_bcd(length(Value), 2),
+			LField ++ Value
+	end;
+marshal_data_element({ans, llvar, Length}, FieldValue) ->
+	Value = field_value_to_list(FieldValue),
+	case length(Value) =< Length of
+		true ->
+			LField = iso_8583_converters:integer_to_bcd(length(Value), 2),
+			LField ++ Value
+	end;
+marshal_data_element({ans, lllvar, Length}, FieldValue) ->
+	Value = field_value_to_list(FieldValue),
+	case length(Value) =< Length of
+		true ->
+			LField = iso_8583_converters:integer_to_bcd(length(Value), 3),
+			LField ++ Value
+	end;
+marshal_data_element({x_n, fixed, Length}, FieldValue) ->
+	Value = field_value_to_list(FieldValue),
+	[Head | Rest] = Value,
+	case Head =:= $C orelse Head =:= $D of
+		true ->
+			IntValue = list_to_integer(Rest),
+			[Head|iso_8583_converters:integer_to_bcd(IntValue, Length)]
+	end;
 marshal_data_element({b, fixed, Length}, FieldValue) when size(FieldValue) =:= Length div 8->
 	binary_to_list(FieldValue).
 

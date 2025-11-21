@@ -13,47 +13,26 @@
 %%
 %% Exported Functions
 %%
--export([
-    % Hex conversion functions
-    utf8_to_ascii_hex/1,
-    ascii_hex_to_utf8/1,
-    binary_to_ascii_hex/1,
-    binary_list_to_ascii_hex/1,
-    ascii_hex_to_binary/1,
-    ascii_hex_to_binary_list/1,
-    integer_to_ascii_hex/1,
-    ascii_hex_to_integer/1,
+-export([utf8_to_ascii_hex/1, ascii_hex_to_utf8/1, binary_to_ascii_hex/1,
+         binary_list_to_ascii_hex/1, ascii_hex_to_binary/1, ascii_hex_to_binary_list/1,
+         integer_to_ascii_hex/1, ascii_hex_to_integer/1, numeric_utf8_to_integer/1,
+         integer_to_numeric_utf8/1, numeric_utf8_to_bcd/1, bcd_to_numeric_utf8/1, integer_to_bcd/1,
+         integer_to_bcd/2, bcd_to_integer/1, ascii_hex_to_bcd/2, bcd_to_ascii_hex/3,
+         track2_to_string/2, string_to_track2/1, ascii_to_ebcdic/1, ebcdic_to_ascii/1,
+         list_to_bitmap/2, bitmap_to_list/2, pad_with_trailing_spaces/2, strip_leading_zeroes/1,
+         strip_trailing_spaces/1, strip_leading_spaces/1, integer_to_string/2]).
+
+                                   % Hex conversion functions
 
     % Numeric conversions
-    numeric_utf8_to_integer/1,
-    integer_to_numeric_utf8/1,
-    numeric_utf8_to_bcd/1,
-    bcd_to_numeric_utf8/1,
-    integer_to_bcd/1,
-    integer_to_bcd/2,
-    bcd_to_integer/1,
-    ascii_hex_to_bcd/2,
-    bcd_to_ascii_hex/3,
 
     % Track 2 conversions
-    track2_to_string/2,
-    string_to_track2/1,
 
     % EBCDIC / ASCII conversion
-    ascii_to_ebcdic/1,
-    ebcdic_to_ascii/1,
 
     % Bitmap conversion
-    list_to_bitmap/2,
-    bitmap_to_list/2,
 
     % String utilities
-    pad_with_trailing_spaces/2,
-    strip_leading_zeroes/1,
-    strip_trailing_spaces/1,
-    strip_leading_spaces/1,
-    integer_to_string/2
-]).
 
 %%
 %% Hex Conversions (delegated to iso_8583_hex_converter)
@@ -157,11 +136,10 @@ strip_leading_spaces(Str) ->
 integer_to_string(Int, Length) ->
     IntStr = integer_to_list(Int),
     Padding = Length - length(IntStr),
-    if
-        Padding > 0 ->
-            lists:duplicate(Padding, $0) ++ IntStr;
-        true ->
-            IntStr
+    if Padding > 0 ->
+           lists:duplicate(Padding, $0) ++ IntStr;
+       true ->
+           IntStr
     end.
 
 %% @doc Converts an integer to BCD with specific length (in digits).
@@ -175,10 +153,13 @@ integer_to_bcd(IntValue, Length) ->
 %%
 %% @spec ascii_hex_to_bcd(string(), string()) -> list(byte())
 ascii_hex_to_bcd(AsciiHex, PadChar) ->
-    PaddedAsciiHex = case length(AsciiHex) rem 2 of
-        0 -> AsciiHex;
-        1 -> PadChar ++ AsciiHex
-    end,
+    PaddedAsciiHex =
+        case length(AsciiHex) rem 2 of
+            0 ->
+                AsciiHex;
+            1 ->
+                PadChar ++ AsciiHex
+        end,
     ascii_hex_to_bcd_pairs(PaddedAsciiHex, []).
 
 ascii_hex_to_bcd_pairs([], Result) ->
@@ -206,8 +187,9 @@ bcd_to_ascii_hex(BcdValue, Length, PadChar) ->
     end.
 
 bcd_to_ascii_hex_full([], Result) ->
-    lists:flatten(lists:reverse(Result));
+    lists:flatten(
+        lists:reverse(Result));
 bcd_to_ascii_hex_full([Byte | Rest], Result) ->
-    High = (Byte div 16) + $0,
-    Low = (Byte rem 16) + $0,
+    High = Byte div 16 + $0,
+    Low = Byte rem 16 + $0,
     bcd_to_ascii_hex_full(Rest, [[High, Low] | Result]).

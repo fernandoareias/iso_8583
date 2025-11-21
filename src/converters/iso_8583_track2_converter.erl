@@ -3,10 +3,7 @@
 %%
 %% Exported Functions
 %%
--export([
-    track2_to_string/2,
-    string_to_track2/1
-]).
+-export([track2_to_string/2, string_to_track2/1]).
 
 %%
 %% API Functions
@@ -16,16 +13,14 @@
 %%      an ASCII encoding of the same data.
 %%
 %% @spec track2_to_string(list(byte()), integer()) -> string()
--spec(track2_to_string(list(byte()), integer()) -> string()).
-
+-spec track2_to_string([byte()], integer()) -> string().
 track2_to_string(Track2Data, Length) ->
     lists:sublist(track2_to_string_impl(Track2Data, []), 1, Length).
 
 %% @doc Converts a string of ASCII characters to a track 2 encoding.
 %%
 %% @spec string_to_track2(string()) -> list(byte())
--spec(string_to_track2(string()) -> list(byte())).
-
+-spec string_to_track2(string()) -> [byte()].
 string_to_track2(Str) ->
     string_to_track2(Str, [], 0, true).
 

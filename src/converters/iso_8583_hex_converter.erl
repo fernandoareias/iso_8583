@@ -8,21 +8,15 @@
 %%
 %% Exported Functions
 %%
--export([
-    % UTF8 to/from ASCII hex
-    utf8_to_ascii_hex/1,
-    ascii_hex_to_utf8/1,
+-export([utf8_to_ascii_hex/1, ascii_hex_to_utf8/1, binary_to_ascii_hex/1,
+         binary_list_to_ascii_hex/1, ascii_hex_to_binary/1, ascii_hex_to_binary_list/1,
+         integer_to_ascii_hex/1, ascii_hex_to_integer/1]).
+
+                                                              % UTF8 to/from ASCII hex
 
     % Binary to/from ASCII hex
-    binary_to_ascii_hex/1,
-    binary_list_to_ascii_hex/1,
-    ascii_hex_to_binary/1,
-    ascii_hex_to_binary_list/1,
 
     % Integer to/from ASCII hex
-    integer_to_ascii_hex/1,
-    ascii_hex_to_integer/1
-]).
 
 %%
 %% API Functions
@@ -32,8 +26,7 @@
 %%      the ASCII hex character codes.
 %%
 %% @spec utf8_to_ascii_hex(utf8()) -> utf8()
--spec(utf8_to_ascii_hex(utf8()) -> utf8()).
-
+-spec utf8_to_ascii_hex(utf8()) -> utf8().
 utf8_to_ascii_hex(Str) ->
     utf8_to_ascii_hex(Str, <<>>).
 
@@ -41,40 +34,35 @@ utf8_to_ascii_hex(Str) ->
 %%      to an equivalent UTF8 string().
 %%
 %% @spec ascii_hex_to_utf8(utf8()) -> utf8()
--spec(ascii_hex_to_utf8(utf8()) -> utf8()).
-
+-spec ascii_hex_to_utf8(utf8()) -> utf8().
 ascii_hex_to_utf8(HexStr) ->
     ascii_hex_to_utf8(HexStr, <<>>).
 
 %% @doc Returns the ASCII hex encoding of a binary value.
 %%
 %% @spec binary_to_ascii_hex(binary()) -> utf8()
--spec(binary_to_ascii_hex(binary()) -> utf8()).
-
+-spec binary_to_ascii_hex(binary()) -> utf8().
 binary_to_ascii_hex(BinValue) ->
     binary_to_ascii_hex(BinValue, <<>>).
 
 %% @doc Returns the ASCII hex encoding of a list of bytes.
 %%
 %% @spec binary_list_to_ascii_hex(list(byte())) -> utf8()
--spec(binary_list_to_ascii_hex(list(byte())) -> utf8()).
-
+-spec binary_list_to_ascii_hex([byte()]) -> utf8().
 binary_list_to_ascii_hex(BinList) ->
     binary_to_ascii_hex(list_to_binary(BinList), <<>>).
 
 %% @doc Returns the binary value corresponding to an ASCII hex string.
 %%
 %% @spec ascii_hex_to_binary(utf8()) -> binary()
--spec(ascii_hex_to_binary(utf8()) -> binary()).
-
+-spec ascii_hex_to_binary(utf8()) -> binary().
 ascii_hex_to_binary(HexStr) ->
     list_to_binary(ascii_hex_to_binary_list(HexStr)).
 
 %% @doc Returns a binary list corresponding to an ASCII hex string.
 %%
 %% @spec ascii_hex_to_binary_list(utf8()) -> bcd()
--spec(ascii_hex_to_binary_list(utf8()) -> bcd()).
-
+-spec ascii_hex_to_binary_list(utf8()) -> bcd().
 ascii_hex_to_binary_list(HexStr) ->
     case size(HexStr) rem 2 of
         0 ->
@@ -86,16 +74,14 @@ ascii_hex_to_binary_list(HexStr) ->
 %% @doc Converts an integer to ASCII hex string.
 %%
 %% @spec integer_to_ascii_hex(integer()) -> utf8()
--spec(integer_to_ascii_hex(integer()) -> utf8()).
-
+-spec integer_to_ascii_hex(integer()) -> utf8().
 integer_to_ascii_hex(IntValue) ->
     list_to_binary(integer_to_list(IntValue, 16)).
 
 %% @doc Converts an ASCII hex string to integer.
 %%
 %% @spec ascii_hex_to_integer(utf8()) -> integer()
--spec(ascii_hex_to_integer(utf8()) -> integer()).
-
+-spec ascii_hex_to_integer(utf8()) -> integer().
 ascii_hex_to_integer(AsciiHex) ->
     list_to_integer(binary_to_list(AsciiHex), 16).
 

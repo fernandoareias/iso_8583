@@ -1,4 +1,3 @@
-
 %% Defines identifiers for ISO 8583 fields.
 -define(MTI, 0).
 -define(BITMAP_EXTENDED, 1).
@@ -12,17 +11,14 @@
 -define(CONVERSION_RATE_SETTLE, 9).
 -define(CONVERSION_RATE_CARDHOLDER_BILLING, 10).
 -define(SYSTEMS_TRACE_AUDIT_NUMBER, 11).
-
 % 1987 declaration for field 12
 -define(TIME_LOCAL_TRAN, 12).
 % 1993 declaration for field 12
 -define(DATE_AND_TIME_LOCAL_TRAN, 12).
-
 % 1987 declaration for field 12
 -define(DATE_LOCAL_TRAN, 13).
 % 1993 declaration for field 13
 -define(DATE_EFF, 13).
-
 -define(DATE_EXP, 14).
 -define(DATE_SETTLE, 15).
 -define(DATE_CONVERSION, 16).
@@ -31,43 +27,34 @@
 -define(ACQUIRER_COUNTRY_CODE, 19).
 -define(PAN_EXT_COUNTRY_CODE, 20).
 -define(FORWARDING_INST_COUNTRY_CODE, 21).
-
 % 1987 declaration for field 22
 -define(POS_ENTRY_MODE, 22).
 % 1993 declaration for field 22
 -define(POS_DATA_CODE, 22).
-
 -define(CARD_SEQUENCE_NUMBER, 23).
-
 % 1987 declaration for field 24
 -define(NETWORK_INTERNATIONAL_ID, 24).
 % 1993 declaration for field 24
 -define(FUNCTION_CODE, 24).
-
 % 1987 declaration for field 25
 -define(POS_CONDITION_CODE, 25).
 % 1993 declaration for field 25
 -define(MESSAGE_REASON_CODE, 25).
-
 % 1987 declaration for field 26
 -define(POS_CAPTURE_CODE, 26).
 % 1993 declaration for field 26
 -define(CARD_ACCEPTOR_BUSINESS_CODE, 26).
-
 -define(AUTHORIZING_ID_RESP_LEN, 27).
 -define(AMOUNT_TRAN_FEE, 28).
 -define(AMOUNT_SETTLE_FEE, 29).
-
 % 1987 declaration for field 30
 -define(AMOUNT_TRAN_PROCESSING_FEE, 30).
 % 1993 declaration for field 30
 -define(AMOUNT_ORIGINAL, 30).
-
 % 1987 declaration for field 31
 -define(AMOUNT_SETTLE_PROCESSING_FEE, 31).
 % 1993 declaration for field 31
 -define(ACQUIRER_REFERENCE_DATA, 31).
-
 -define(ACQUIRING_INST_ID_CODE, 32).
 -define(FORWARDING_INST_ID_CODE, 33).
 -define(PAN_EXTENDED, 34).
@@ -91,17 +78,14 @@
 -define(PERSONAL_ID_NUMBER_DATA, 52).
 -define(SECURITY_RELATED_CONTROL_INFO, 53).
 -define(ADDITIONAL_AMOUNTS, 54).
-
 % 1987 definition for field 55
 -define(RESERVED_ISO1, 55).
 % 1993 definition for field 55
 -define(ICC_SYSTEM_RELATED_DATA, 55).
-
 % 1987 definition for field 56
 -define(RESERVED_ISO2, 56).
 % 1993 definition for field 56
 -define(ORIGINAL_DATA_ELEMENTS_1993, 56).
-
 -define(RESERVED_NATIONAL1, 57).
 -define(RESERVED_NATIONAL2, 58).
 -define(RESERVED_NATIONAL3, 59).
@@ -110,12 +94,10 @@
 -define(RESERVED_PRIVATE3, 62).
 -define(RESERVED_PRIVATE4, 63).
 -define(MESSAGE_AUTHENTICATION_CODE, 64).
-
 % 1987 definition for field 65
 -define(RESERVED_ISO3, 65).
 % 1993 definition for field 65
 -define(BITMAP_TERTIARY, 65).
-
 -define(SETTLE_CODE, 66).
 -define(EXTENDED_PAYMENT_CODE, 67).
 -define(RECEIVING_INSTITUTION_COUNTRY_CODE, 68).

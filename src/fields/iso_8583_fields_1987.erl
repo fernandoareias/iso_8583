@@ -15,12 +15,7 @@
 %%
 %% Exported Functions
 %%
--export([
-    get_encoding/1,
-    get_field_name/1,
-    is_valid_field/1,
-    get_all_fields/0
-]).
+-export([get_encoding/1, get_field_name/1, is_valid_field/1, get_all_fields/0]).
 
 %%
 %% API Functions
@@ -30,16 +25,13 @@
 %%      format, and maximum length.
 %%
 %% @spec get_encoding(FieldId::integer()|list(integer())) -> field_encoding()
--spec(get_encoding(integer() | list(integer())) -> field_encoding()).
-
+-spec get_encoding(integer() | [integer()]) -> field_encoding().
 %% Field 0 - Message Type Indicator
 get_encoding(?MTI) ->
     {n, fixed, 4};
-
 %% Field 1 - Bitmap (Extended)
 get_encoding(?BITMAP_EXTENDED) ->
     {b, fixed, 64};
-
 %% Primary Fields (2-11)
 get_encoding(?PAN) ->
     {n, llvar, 19};
@@ -61,7 +53,6 @@ get_encoding(?CONVERSION_RATE_CARDHOLDER_BILLING) ->
     {n, fixed, 8};
 get_encoding(?SYSTEMS_TRACE_AUDIT_NUMBER) ->
     {n, fixed, 6};
-
 %% ISO 8583:1987 specific fields (12-27)
 get_encoding(?TIME_LOCAL_TRAN) ->  % Field 12 in 1987
     {n, fixed, 6};
@@ -95,7 +86,6 @@ get_encoding(?POS_CAPTURE_CODE) ->  % Field 26 in 1987
     {n, fixed, 2};
 get_encoding(?AUTHORIZING_ID_RESP_LEN) ->
     {n, fixed, 1};
-
 %% Amount fields (28-31)
 get_encoding(?AMOUNT_TRAN_FEE) ->
     {x_n, fixed, 8};
@@ -105,7 +95,6 @@ get_encoding(?AMOUNT_TRAN_PROCESSING_FEE) ->  % Field 30 in 1987
     {x_n, fixed, 8};
 get_encoding(?AMOUNT_SETTLE_PROCESSING_FEE) ->  % Field 31 in 1987
     {x_n, fixed, 8};
-
 %% Institution and track data (32-45)
 get_encoding(?ACQUIRING_INST_ID_CODE) ->
     {n, llvar, 11};
@@ -135,7 +124,6 @@ get_encoding(?ADDITIONAL_RESP_DATA) ->
     {an, llvar, 25};
 get_encoding(?TRACK_1_DATA) ->
     {an, llvar, 76};
-
 %% Additional data (46-48)
 get_encoding(?ADDITIONAL_DATA_ISO) ->
     {ans, lllvar, 999};
@@ -143,7 +131,6 @@ get_encoding(?ADDITIONAL_DATA_NATIONAL) ->
     {ans, lllvar, 999};
 get_encoding(?ADDITIONAL_DATA_PRIVATE) ->
     {ans, lllvar, 999};
-
 %% Currency and security (49-54)
 get_encoding(?CURRENCY_CODE_TRAN) ->
     {an, fixed, 3};
@@ -157,13 +144,11 @@ get_encoding(?SECURITY_RELATED_CONTROL_INFO) ->
     {n, fixed, 16};
 get_encoding(?ADDITIONAL_AMOUNTS) ->
     {an, lllvar, 120};
-
 %% Reserved ISO (55-56) - 1987 definitions
 get_encoding(?RESERVED_ISO1) ->
     {ans, lllvar, 999};
 get_encoding(?RESERVED_ISO2) ->
     {ans, lllvar, 999};
-
 %% Reserved National and Private (57-64)
 get_encoding(?RESERVED_NATIONAL1) ->
     {ans, lllvar, 999};
@@ -181,7 +166,6 @@ get_encoding(?RESERVED_PRIVATE4) ->
     {ans, lllvar, 999};
 get_encoding(?MESSAGE_AUTHENTICATION_CODE) ->
     {b, fixed, 64};
-
 %% Settlement and network management (65-73) - Field 65 is RESERVED_ISO3 in 1987
 get_encoding(65) ->  % RESERVED_ISO3 in 1987
     {ans, lllvar, 999};
@@ -201,7 +185,6 @@ get_encoding(?MESSAGE_NUMBER_LAST) ->
     {n, fixed, 4};
 get_encoding(?DATE_ACTION) ->
     {n, fixed, 6};
-
 %% Transaction counts (74-89)
 get_encoding(?CREDITS_NUMBER) ->
     {n, fixed, 10};
@@ -235,7 +218,6 @@ get_encoding(?DEBITS_AMOUNT) ->
     {n, fixed, 16};
 get_encoding(?DEBITS_REVERSAL_AMOUNT) ->
     {n, fixed, 16};
-
 %% Original data and file management (90-104)
 get_encoding(?ORIGINAL_DATA_ELEMENTS) ->
     {n, fixed, 42};
@@ -267,15 +249,12 @@ get_encoding(?ACCOUNT_ID2) ->
     {ans, llvar, 28};
 get_encoding(?TRAN_DESCRIPTION) ->
     {ans, lllvar, 100};
-
 %% Private use (105-127)
 get_encoding(Id) when Id >= 105 andalso Id =< 127 ->
     {ans, lllvar, 999};
-
 %% Field 128 - Message Authentication Code 2
 get_encoding(?MESSAGE_AUTHENTICATION_CODE2) ->
     {b, fixed, 64};
-
 %% Support for list-based field IDs
 get_encoding([FieldId]) when is_integer(FieldId) ->
     get_encoding(FieldId).
@@ -283,17 +262,25 @@ get_encoding([FieldId]) when is_integer(FieldId) ->
 %% @doc Returns the name of a field given its ID.
 %%
 %% @spec get_field_name(integer()) -> binary()
--spec(get_field_name(integer()) -> binary()).
-
-get_field_name(?MTI) -> <<"Message Type Indicator">>;
-get_field_name(?PAN) -> <<"Primary Account Number">>;
-get_field_name(?PROC_CODE) -> <<"Processing Code">>;
-get_field_name(?AMOUNT_TRAN) -> <<"Transaction Amount">>;
-get_field_name(?SYSTEMS_TRACE_AUDIT_NUMBER) -> <<"Systems Trace Audit Number">>;
-get_field_name(?TIME_LOCAL_TRAN) -> <<"Time, Local Transaction">>;
-get_field_name(?DATE_LOCAL_TRAN) -> <<"Date, Local Transaction">>;
-get_field_name(?CARD_ACCEPTOR_TERMINAL_ID) -> <<"Card Acceptor Terminal ID">>;
-get_field_name(?RESP_CODE) -> <<"Response Code">>;
+-spec get_field_name(integer()) -> binary().
+get_field_name(?MTI) ->
+    <<"Message Type Indicator">>;
+get_field_name(?PAN) ->
+    <<"Primary Account Number">>;
+get_field_name(?PROC_CODE) ->
+    <<"Processing Code">>;
+get_field_name(?AMOUNT_TRAN) ->
+    <<"Transaction Amount">>;
+get_field_name(?SYSTEMS_TRACE_AUDIT_NUMBER) ->
+    <<"Systems Trace Audit Number">>;
+get_field_name(?TIME_LOCAL_TRAN) ->
+    <<"Time, Local Transaction">>;
+get_field_name(?DATE_LOCAL_TRAN) ->
+    <<"Date, Local Transaction">>;
+get_field_name(?CARD_ACCEPTOR_TERMINAL_ID) ->
+    <<"Card Acceptor Terminal ID">>;
+get_field_name(?RESP_CODE) ->
+    <<"Response Code">>;
 get_field_name(Id) when Id >= 105 andalso Id =< 127 ->
     iolist_to_binary(io_lib:format("Private Use Field ~p", [Id]));
 get_field_name(Id) ->
@@ -302,15 +289,15 @@ get_field_name(Id) ->
 %% @doc Checks if a field ID is valid for ISO 8583:1987.
 %%
 %% @spec is_valid_field(integer()) -> boolean()
--spec(is_valid_field(integer()) -> boolean()).
-
-is_valid_field(Id) when Id >= 0 andalso Id =< 128 -> true;
-is_valid_field(_) -> false.
+-spec is_valid_field(integer()) -> boolean().
+is_valid_field(Id) when Id >= 0 andalso Id =< 128 ->
+    true;
+is_valid_field(_) ->
+    false.
 
 %% @doc Returns a list of all standard field IDs.
 %%
 %% @spec get_all_fields() -> list(integer())
--spec(get_all_fields() -> list(integer())).
-
+-spec get_all_fields() -> [integer()].
 get_all_fields() ->
     lists:seq(0, 128).

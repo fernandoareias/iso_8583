@@ -35,8 +35,8 @@ Data = iso_8583_marshaller:marshal(Msg2, binary).
 ## 📚 Documentation
 
 Complete documentation is available in:
-- 🇧🇷 [Português](docs/README.md)
-- 🇺🇸 [English](docs/en/README.md)
+- 🇧🇷 [Português](https://github.com/fernandoareias/iso_8583/tree/main/docs/pt-br)
+- 🇺🇸 [English](https://github.com/fernandoareias/iso_8583/tree/main/docs/en)
 
 ## 🏗️ Architecture
 

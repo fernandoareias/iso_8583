@@ -52,7 +52,7 @@ src/
 
 Apache License 2.0
 
-## 📧 Support
+## Support
 
 - **Issues**: [GitHub Issues](https://github.com/fernandoareias/iso_8583/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/fernandoareias/iso_8583/discussions)
